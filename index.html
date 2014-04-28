@@ -3,13 +3,42 @@
 <head>
   <meta charset="utf-8">
   <title>Untitled</title>
-  <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.min.css">
-  <link rel="stylesheet" type="text/css" href="main.css">
+  <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.2/css/normalize.min.css">
+  <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.2/css/foundation.min.css">
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+  <link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 <body>
-	
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-  <script src="main.js"></script>
+	<div class="row">
+		<h1 class="title text-center">look up</h1>
+	</div>
+	<div class="row">
+		<div class="small-12 medium-6 columns">
+			<div class="row">
+			<div class="small-12 columns" id="input-info">Hello</div>
+			</div>
+		</div>
+		<div class="small-12 medium-6 columns">
+			<div class="row">
+			<div class="small-12 columns" id="map"></div>
+			</div>
+		</div>
+	</div>
+
+
+  <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> -->
+  <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.2/js/foundation.min.js"></script> -->
+  <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.2/js/foundation/foundation.topbar.min.js"></script> -->
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+  <script src="js/esri-leaflet.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/map.js"></script>
+  <script src="data/tweets.js"></script>
+
+  <!--<script>
+    $(document).foundation();
+  </script>-->
+
 
 </body>
 </html>
