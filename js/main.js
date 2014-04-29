@@ -5,30 +5,124 @@ var loadData = function(callback) {
     // $.ajax('url/api', callback);
 };
 
+var panToThisMarker = function(latLng) {
+    console.log(latLng);
+    theMap.panTo(latLng);
+}
+
+
 // create tweet class
 var GeoTweet = (function() {
-    function TweetObj(tweet, tweetDate, userName, userIconUrl, geo) {
+    function GeoTweet(tweetId, tweet, tweetDate, userName, userScreenName, userIconUrl, geo) {
+        this.tweetId = tweetId;
         this.tweet = tweet;
-        this.tweetDate = tweetDate;
+        var splitDate = tweetDate.split(' ');
+        this.tweetDate = [splitDate[1], splitDate[2], splitDate[3], splitDate[5]].join(" ");
         this.userName = userName;
+        this.userScreenName = userScreenName;
         this.userIconUrl = userIconUrl;
-        this.geoLocation = geo;
+        this.geoLocation = new L.latLng(geo[0], geo[1]);
         this.marker = new L.marker(L.latLng(geo[0], geo[1]), {
-            'title': this.userName
+            title: this.tweetId
         });
+        this.marker.bindPopup("<img src='" + this.userIconUrl + "'>" + this.userName);
+        // this is not good code, fix!
+        this.marker.on('click', function(e) {
+            panToThisMarker(e.latlng);
+        })
     }
+    GeoTweet.prototype.createTweet = function() {
+        var tweetContainer = $('<div>', {
+            class: 'row tweet-container',
+            'data-tweet-id': this.tweetId
+        });
+        var userIcon = $('<img>', {
+            class: 'user-icon',
+            src: this.userIconUrl
+        });
+        var userNameSpan = $('<span>', {
+            class: "userName",
+            text: this.userName + " @" + this.userScreenName
+        });
+        var tweetDateSpan = $('<span>', {
+            class: "date-span",
+            text: this.tweetDate
+        });
+        var theTweet = $('<span>', {
+            class: "tweet-text",
+            text: this.tweet
+        });
+        var tweetIconContainer = $('<div class="small-2 columns"></div>');
+        var tweetInfoContainer = $('<div class="small-10 columns"></div>')
+        var tweetHeadContainer = $('<div class="row"></div>');
+        var tweetFootContainer = $('<div class="row"></div>');
 
-    return TweetObj;
+        var tweetNameContainer = $('<div class="small-6 columns"></div>');
+        var tweetDateContainer = $('<div class="small-6 columns"></div>');
+        var tweetTextContainer = $('<div class="small-12 columns"></div>');
+
+        tweetIconContainer.append(userIcon);
+        tweetHeadContainer.append(tweetNameContainer.append(userNameSpan),
+            tweetDateContainer.append(tweetDateSpan));
+        tweetFootContainer.append(tweetTextContainer.append(theTweet));
+        tweetInfoContainer.append(tweetHeadContainer, tweetFootContainer);
+        //compile full tweet
+        tweetContainer.append(tweetIconContainer, tweetInfoContainer);
+        return tweetContainer;
+    };
+    return GeoTweet;
 })();
 
 // create list of tweets class
 var ListOfGeoTweets = (function() {
-    function ListOfGeoTweets() {
+    function ListOfGeoTweets(mapObj) {
         this.geoTweets = [];
+        this.map = mapObj;
     }
-    ListOfGeoTweets.prototype.addGeoTweet = function(geoTweet) {
-        this.geoTweets.unshift(geoTweet);
+    ListOfGeoTweets.prototype.addGeoTweetsArray = function(geoTweetsArray) {
+        this.geoTweets = this.geoTweets.concat(geoTweetsArray);
     };
+    ListOfGeoTweets.prototype.renderTweetsOnMap = function() {
+
+        for (var i = 0; i < this.geoTweets.length; i++) {
+            this.geoTweets[i].marker.addTo(this.map);
+        };
+    };
+    ListOfGeoTweets.prototype.emptyTweetList = function() {
+        this.GeoTweets = [];
+    };
+    ListOfGeoTweets.prototype.clearMapOfCurrentMarkers = function() {
+        for (var i = 0; i < this.geoTweets.length; i++) {
+            this.map.removeLayer(this.geoTweets[i].marker);
+        };
+    };
+    ListOfGeoTweets.prototype.setMarkerIcons = function(icon) {
+        for (var i = 0; i < this.geoTweets.length; i++) {
+            this.geoTweets[i].marker.setIcon(icon);
+        };
+    };
+
+    // setup tweet list and tweet objects
+    ListOfGeoTweets.prototype.addGeoTweetData = function(returnedGeoTweets) {
+        for (var i = 0; i < returnedGeoTweets.statuses.length; i++) {
+            var newGeoTweet = new GeoTweet(returnedGeoTweets.statuses[i].id_str,
+                returnedGeoTweets.statuses[i].text,
+                returnedGeoTweets.statuses[i].created_at,
+                returnedGeoTweets.statuses[i].user.name,
+                returnedGeoTweets.statuses[i].user.screen_name,
+                returnedGeoTweets.statuses[i].user.profile_image_url,
+                returnedGeoTweets.statuses[i].geo.coordinates);
+            this.geoTweets.unshift(newGeoTweet);
+        };
+    }
+    ListOfGeoTweets.prototype.createFeed = function() {
+        var newFeed = [];
+        for (var i = 0; i < this.geoTweets.length; i++) {
+            newFeed.unshift(this.geoTweets[i].createTweet());
+        };
+        return newFeed;
+    };
+
     return ListOfGeoTweets;
 })();
 
@@ -40,20 +134,15 @@ $(document).on('ready', function() {
 
 
     // setup initial GeoTweets and ListOfGeoTweets
-    allGeoTweets = new ListOfGeoTweets();
-    for (var i = 0; i < demoTweets.statuses.length; i++) {
-        var newGeoTweet = new GeoTweet(demoTweets.statuses[i].text,
-            demoTweets.statuses[i].created_at,
-            demoTweets.statuses[i].user.screen_name,
-            demoTweets.statuses[i].user.profile_image_url,
-            demoTweets.statuses[i].geo.coordinates);
-        console.log(newGeoTweet);
-        allGeoTweets.addGeoTweet(newGeoTweet)
-    };
+    allGeoTweets = new ListOfGeoTweets(theMap);
 
-    for (var i = 0; i < allGeoTweets.geoTweets.length; i++) {
-        allGeoTweets.geoTweets[i].marker.addTo(theMap);
-    };
+    allGeoTweets.addGeoTweetData(demoTweets);
+    allGeoTweets.setMarkerIcons(tweetIcon);
+
+    allGeoTweets.renderTweetsOnMap();
+
+    // display feed
+    $('#tweet-feed').append(allGeoTweets.createFeed());
 
     // submit search api request 
     // then switch to tweet view
