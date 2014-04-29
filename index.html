@@ -15,8 +15,61 @@
 	<div class="row">
 		<div class="small-12 medium-6 columns" id="info">
 			<div class="row">
-				<div class="small-12 columns" id="tweet-feed"></div>
-				<div class="small-12 columns" id="search-form"></div>
+				<div class="small-12 columns hide" id="tweet-feed"></div>
+				<div class="small-12 columns" id="search-form">
+					<form action="" method="POST" role="form">
+						<fieldset>
+	    				<legend>Geo Location</legend>
+							<div class="row">
+						    <div class="small-6 columns">
+						      <div class="row collapse">
+						        <div class="small-2 columns">
+						          <span class="prefix">Lat:</span>
+						        </div>
+						        <div class="small-10 columns">
+							          <input type="text" id="lat" placeholder="Latitude">
+						        </div>
+						      </div>
+						    </div>
+						    <div class="small-6 columns">
+						      <div class="row collapse">
+						        <div class="small-2 columns">
+						          <span class="prefix">Long:</span>
+						        </div>
+						        <div class="small-10 columns">
+							          <input type="text" id="long" placeholder="Longitude">
+						        </div>
+						      </div>
+						    </div>
+						  </div>
+						  <div class="row">
+
+						    <div class="small-8 small-offset-1 columns">
+						    	<div class="row">
+						    		<div class="small-4 columns">
+						    			<label for="radius" class="right inline">Radius:</label>
+						    		</div>
+								    <div class="small-5 columns">
+								        <input type="text" id="radius" placeholder="Distance"/>
+								    </div>
+								    <div class="small-3 columns">
+							        <select id="radius-in">
+						          	<option value="mi">Mi</option>
+						          	<option value="km">Km</option>
+						        	</select>
+						    		</div>
+							  	</div>
+						    </div>
+
+					    </div>
+					  </fieldset>
+					  <div class="row">
+						  	<div class="small-2 small-offset-4 columns">
+						  		<button type="submit" class="button" id="search-twitter">Submit</button>
+					  		</div>
+					  </div>
+					</form>
+				</div>
 			</div>
 		</div>
 		<div class="small-12 medium-6 columns">

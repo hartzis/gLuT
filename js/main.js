@@ -1,14 +1,9 @@
-var theMap, allGeoTweets;
+var allGeoTweets;
 
 var loadData = function(callback) {
     callback(data);
     // $.ajax('url/api', callback);
 };
-
-var panToThisMarker = function(latLng) {
-    console.log(latLng);
-    theMap.panTo(latLng);
-}
 
 
 // create tweet class
@@ -21,14 +16,15 @@ var GeoTweet = (function() {
         this.userName = userName;
         this.userScreenName = userScreenName;
         this.userIconUrl = userIconUrl;
-        this.geoLocation = new L.latLng(geo[0], geo[1]);
+        this.geoLatLng = new L.latLng(geo[0], geo[1]);
         this.marker = new L.marker(L.latLng(geo[0], geo[1]), {
             title: this.tweetId
         });
-        this.marker.bindPopup("<img src='" + this.userIconUrl + "'>" + this.userName);
+        this.marker.bindPopup("<div class='text-center'><img src='" + this.userIconUrl + "' class='user-icon'><br>" + this.userName + "</div>");
         // this is not good code, fix!
+        // pan to marker when clicked
         this.marker.on('click', function(e) {
-            panToThisMarker(e.latlng);
+            e.target._map.panTo(e.target._latlng)
         })
     }
     GeoTweet.prototype.createTweet = function() {
@@ -130,19 +126,29 @@ var ListOfGeoTweets = (function() {
 $(document).on('ready', function() {
 
     //setup initial loading of basemap
-    theMap = initialLoadMap('map', 39.7482097, -104.9950172, 14, "Gray", "GrayLabels");
+    var theMap = initialLoadMap('map', 39.7482097, -104.9950172, 14, "Gray", "GrayLabels");
 
 
     // setup initial GeoTweets and ListOfGeoTweets
     allGeoTweets = new ListOfGeoTweets(theMap);
 
-    allGeoTweets.addGeoTweetData(demoTweets);
-    allGeoTweets.setMarkerIcons(tweetIcon);
 
-    allGeoTweets.renderTweetsOnMap();
 
-    // display feed
-    $('#tweet-feed').append(allGeoTweets.createFeed());
+
+    // pan to clicked on tweet and open pop-up info
+    $(document).on('click', '.tweet-container', function() {
+        var tweetId = $(this).attr('data-tweet-id')
+        console.log(tweetId);
+        var foundTweet = allGeoTweets.geoTweets.filter(function(geoTweet) {
+            return geoTweet.tweetId === tweetId;
+        })[0];
+        allGeoTweets.map.panTo(foundTweet.geoLatLng);
+        foundTweet.marker.openPopup();
+    });
+    // pan to clicked marker
+    $(document).on('click', '.leaflet-marker-icon', function() {
+        console.log('pooque');
+    })
 
     // submit search api request 
     // then switch to tweet view
@@ -150,6 +156,14 @@ $(document).on('ready', function() {
     $(document).on('click', '#search-twitter', function() {
 
 
+
+        allGeoTweets.addGeoTweetData(demoTweets);
+        allGeoTweets.setMarkerIcons(tweetIcon);
+
+        allGeoTweets.renderTweetsOnMap();
+
+        // display feed
+        $('#tweet-feed').append(allGeoTweets.createFeed());
 
         // load data from 'server'
         // loadData(function(data){
