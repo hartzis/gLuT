@@ -1,26 +1,25 @@
-var GeoLocation = (function() {
-    function GeoLocation() {
-        this.geoLat = null;
-        this.geoLong = null;
-    };
-    GeoLocation.prototype.assignCoords = function(geoLat, geoLong) {
-        this.geoLat = geoLat;
-        this.geoLong = geoLong;
-    };
-    return GeoLocation;
-})();
-
 var GeoCity = (function() {
     function GeoCity(name) {
         this.name = name;
-        GeoLocation.call(this);
+        this.state = null;
+        this.country = null;
+        this.geoLocation = null;
     };
-    GeoCity.prototype = new GeoLocation();
+    GeoCity.prototype.setGeoLocation = function(geoLat, geoLong) {
+        this.geoLocation = new L.latLong(geoLat, geoLong);
+    };
 
-    return GeoLocation;
+    return GeoCity;
 })();
 
-var map = L.map('map').setView([51.505, -0.09], 13);
 
+var initialLoadMap = function(mapId, geoLat, geoLong, zoomLevel, esriBaseMap, esriBaseMapLabels) {
+    var latLng = new L.latLng(geoLat, geoLong);
+    var map = L.map(mapId).setView(latLng, zoomLevel);
 
-L.esri.basemapLayer("Gray").addTo(map);
+    L.esri.basemapLayer(esriBaseMap).addTo(map);
+
+    L.esri.basemapLayer(esriBaseMapLabels).addTo(map);
+
+    return map;
+}
