@@ -10,6 +10,7 @@
 .tweet-container {
 	border-bottom: 2px solid #444;
 	cursor: pointer;
+	display: none;
 }
 .tweet-container:hover {
 	background-color: #eee;
@@ -21,4 +22,7 @@
 	height: 500px;
 	overflow-y: scroll;
 	overflow-x: hidden;
+}
+.search-info {
+	font-size: .75rem;
 }

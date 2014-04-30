@@ -1,5 +1,23 @@
 var allGeoTweets;
 
+
+// helper function to serialize form into an object
+$.fn.serializeObject = function() {
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function() {
+        if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};
+
 var loadData = function(callback) {
     callback(data);
     // $.ajax('url/api', callback);
@@ -23,48 +41,24 @@ var GeoTweet = (function() {
         this.marker.bindPopup("<div class='text-center'><img src='" + this.userIconUrl + "' class='user-icon'><br>" + this.userName + "</div>");
         // this is not good code, fix!
         // pan to marker when clicked
+        var marker = this.marker;
         this.marker.on('click', function(e) {
+            console.log(marker);
             e.target._map.panTo(e.target._latlng)
         })
     }
     GeoTweet.prototype.createTweet = function() {
-        var tweetContainer = $('<div>', {
-            class: 'row tweet-container',
-            'data-tweet-id': this.tweetId
-        });
-        var userIcon = $('<img>', {
-            class: 'user-icon',
-            src: this.userIconUrl
-        });
-        var userNameSpan = $('<span>', {
-            class: "userName",
-            text: this.userName + " @" + this.userScreenName
-        });
-        var tweetDateSpan = $('<span>', {
-            class: "date-span",
-            text: this.tweetDate
-        });
-        var theTweet = $('<span>', {
-            class: "tweet-text",
-            text: this.tweet
-        });
-        var tweetIconContainer = $('<div class="small-2 columns"></div>');
-        var tweetInfoContainer = $('<div class="small-10 columns"></div>')
-        var tweetHeadContainer = $('<div class="row"></div>');
-        var tweetFootContainer = $('<div class="row"></div>');
+        var $tweetContainer = $('#tweet-container').clone().removeAttr('id');
+        $tweetContainer.attr('data-tweet-id', this.tweetId);
+        $tweetContainer.find('.user-icon').attr('src', this.userIconUrl);
+        $tweetContainer.find('.user-name').text(this.userName + " @" + this.userScreenName);
+        $tweetContainer.find('.date-span').text(this.tweetDate);
+        $tweetContainer.find('.tweet-text').text(this.tweet);
 
-        var tweetNameContainer = $('<div class="small-6 columns"></div>');
-        var tweetDateContainer = $('<div class="small-6 columns"></div>');
-        var tweetTextContainer = $('<div class="small-12 columns"></div>');
+        $tweetContainer.toggle()
 
-        tweetIconContainer.append(userIcon);
-        tweetHeadContainer.append(tweetNameContainer.append(userNameSpan),
-            tweetDateContainer.append(tweetDateSpan));
-        tweetFootContainer.append(tweetTextContainer.append(theTweet));
-        tweetInfoContainer.append(tweetHeadContainer, tweetFootContainer);
-        //compile full tweet
-        tweetContainer.append(tweetIconContainer, tweetInfoContainer);
-        return tweetContainer;
+        return $tweetContainer;
+
     };
     return GeoTweet;
 })();
@@ -135,7 +129,7 @@ $(document).on('ready', function() {
 
 
 
-    // pan to clicked on tweet and open pop-up info
+    // pan to clicked on tweet text and open pop-up info
     $(document).on('click', '.tweet-container', function() {
         var tweetId = $(this).attr('data-tweet-id')
         console.log(tweetId);
@@ -145,16 +139,14 @@ $(document).on('ready', function() {
         allGeoTweets.map.panTo(foundTweet.geoLatLng);
         foundTweet.marker.openPopup();
     });
-    // pan to clicked marker
-    $(document).on('click', '.leaflet-marker-icon', function() {
-        console.log('pooque');
-    })
 
     // submit search api request 
     // then switch to tweet view
     // populate map with tweet markers
     $(document).on('click', '#search-twitter', function() {
 
+        $('#search-form').slideToggle();
+        $('#tweet-feed').slideToggle();
 
 
         allGeoTweets.addGeoTweetData(demoTweets);
@@ -164,6 +156,9 @@ $(document).on('ready', function() {
 
         // display feed
         $('#tweet-feed').append(allGeoTweets.createFeed());
+
+        var formObject = $('#search-form form').serializeObject()
+        console.log(formObject);
 
         // load data from 'server'
         // loadData(function(data){
