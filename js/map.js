@@ -15,6 +15,7 @@ var MapObjects = (function() {
     MapObjects.prototype.removeCurrentMarkers = function() {
         this.map.removeLayer(this.markersFeatureGroup);
         this.markersFeatureGroup.clearLayers();
+        this.markers = [];
     };
     MapObjects.prototype.setMarkerIcons = function(icon) {
         for (var i = 0; i < this.markers.length; i++) {
@@ -33,9 +34,6 @@ var MapObjects = (function() {
                 alt: thisTweet.tweetId
             });
             newMarker.bindPopup("<div class='text-center'><img src='" + thisTweet.userIconUrl + "' class='user-icon'><br>" + thisTweet.userName + "</div>");
-            // newMarker.on('click', function(e) {
-            //     thisMap.panTo(e.latlng);
-            // });
             this.markers.unshift(newMarker);
         };
     };
@@ -47,8 +45,8 @@ var MapObjects = (function() {
     MapObjects.prototype.createMarkersFeatureOnClickEvent = function(tweetFeed, $tweetsContainer) {
         var thisMap = this.map;
         this.markersFeatureGroup.on('click', function(e) {
+            // get tweet id and find tweet DOM element
             var tweetId = e.layer.options.alt;
-            console.log(e.layer.options.alt);
             thisMap.panTo(e.latlng);
             theTweetDom = $tweetsContainer.find('[data-tweet-id="' + tweetId + '"]');
             theTweetDom.addClass('callout').siblings().removeClass('callout');

@@ -57,7 +57,7 @@ var GeoTweet = (function() {
 
 // create list of tweets class
 var ListOfGeoTweets = (function() {
-    function ListOfGeoTweets(mapObj) {
+    function ListOfGeoTweets() {
         this.geoTweets = [];
     }
     ListOfGeoTweets.prototype.addGeoTweetsArray = function(geoTweetsArray) {
@@ -121,9 +121,9 @@ $(document).on('ready', function() {
 
     // pan to clicked on tweet text and open pop-up info
     $(document).on('click', '.tweet-container', function() {
+        // get tweet by data-tweet-id
         var tweetId = $(this).attr('data-tweet-id')
         $(this).addClass('callout').siblings().removeClass('callout');
-        console.log(tweetId);
         var foundMarker = theMapObjects.markers.filter(function(marker) {
             return marker.options.alt === tweetId;
         })[0];

@@ -9,6 +9,9 @@ body{
 	margin-top: 0.45rem;
 	background-color: rgb(203,219,225);
 }
+.panel.callout:hover {
+	background-color: rgb(203,219,225);
+}
 #map {
 	height: 500px;
 	border: 2px solid #aaa;
