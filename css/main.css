@@ -4,6 +4,11 @@ body{
 .panel {
 	padding: 0.55rem;
 }
+.panel.callout {
+	margin-bottom: 0.45rem;
+	margin-top: 0.45rem;
+	background-color: rgb(203,219,225);
+}
 #map {
 	height: 500px;
 	border: 2px solid #aaa;
@@ -24,6 +29,12 @@ body{
 }
 .user-icon {
 	border-radius: 15%;
+}
+
+/* need to have a container position
+relative to get the position of tweets from*/
+#tweets-container {
+	position: relative;
 }
 #tweet-feed {
 	height: 436px;

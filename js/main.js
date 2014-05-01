@@ -1,4 +1,4 @@
-var allGeoTweets;
+var allGeoTweets, theMapObjects;
 
 
 // helper function to serialize form into an object
@@ -34,18 +34,9 @@ var GeoTweet = (function() {
         this.userName = userName;
         this.userScreenName = userScreenName;
         this.userIconUrl = userIconUrl;
-        this.geoLatLng = new L.latLng(geo[0], geo[1]);
-        this.marker = new L.marker(L.latLng(geo[0], geo[1]), {
-            title: this.tweetId
-        });
-        this.marker.bindPopup("<div class='text-center'><img src='" + this.userIconUrl + "' class='user-icon'><br>" + this.userName + "</div>");
-        // this is not good code, fix!
-        // pan to marker when clicked
-        var marker = this.marker;
-        this.marker.on('click', function(e) {
-            console.log(marker);
-            e.target._map.panTo(e.target._latlng)
-        })
+        this.geoLatLng = geo;
+        // moving to listofgeos
+
     }
     GeoTweet.prototype.createTweet = function() {
         var $tweetContainer = $('#tweet-container').clone().removeAttr('id');
@@ -59,8 +50,8 @@ var GeoTweet = (function() {
         $tweetContainer.toggle()
 
         return $tweetContainer;
-
     };
+
     return GeoTweet;
 })();
 
@@ -68,31 +59,13 @@ var GeoTweet = (function() {
 var ListOfGeoTweets = (function() {
     function ListOfGeoTweets(mapObj) {
         this.geoTweets = [];
-        this.map = mapObj;
     }
     ListOfGeoTweets.prototype.addGeoTweetsArray = function(geoTweetsArray) {
         this.geoTweets = this.geoTweets.concat(geoTweetsArray);
     };
-    ListOfGeoTweets.prototype.renderTweetsOnMap = function() {
-
-        for (var i = 0; i < this.geoTweets.length; i++) {
-            this.geoTweets[i].marker.addTo(this.map);
-        };
+    ListOfGeoTweets.prototype.emptyGeoTweets = function() {
+        this.geoTweets = [];
     };
-    ListOfGeoTweets.prototype.emptyTweetList = function() {
-        this.GeoTweets = [];
-    };
-    ListOfGeoTweets.prototype.clearMapOfCurrentMarkers = function() {
-        for (var i = 0; i < this.geoTweets.length; i++) {
-            this.map.removeLayer(this.geoTweets[i].marker);
-        };
-    };
-    ListOfGeoTweets.prototype.setMarkerIcons = function(icon) {
-        for (var i = 0; i < this.geoTweets.length; i++) {
-            this.geoTweets[i].marker.setIcon(icon);
-        };
-    };
-
     // setup tweet list and tweet objects
     ListOfGeoTweets.prototype.addGeoTweetData = function(returnedGeoTweets) {
         for (var i = 0; i < returnedGeoTweets.statuses.length; i++) {
@@ -118,20 +91,22 @@ var ListOfGeoTweets = (function() {
 })();
 
 // fake tweet functions
-var fakeTweets = function(testCity) {
-    console.log(testCity);
-    var getThisJson = "./data/" + testCity + ".json";
-    console.log(getThisJson);
+var fakeTweets = function(testCity, allGeoTweets, theMapObjects, tweetIcon, tweetFeed, tweetsContainer, callback) {
 
     allGeoTweets.addGeoTweetData(window[testCity]);
-    allGeoTweets.setMarkerIcons(tweetIcon);
-    allGeoTweets.renderTweetsOnMap();
-    $('#tweet-feed').append(allGeoTweets.createFeed());
+    theMapObjects.createMarkers(allGeoTweets.geoTweets);
+    theMapObjects.setMarkerIcons(tweetIcon);
+    theMapObjects.createMarkersFeatureGroup();
+    theMapObjects.createMarkersFeatureOnClickEvent(tweetFeed, tweetsContainer);
+    theMapObjects.renderMarkersOnMap();
 
+    /* need to have a container position
+		relative to get the position of tweets from*/
+    tweetsContainer.append(allGeoTweets.createFeed());
+
+    callback();
     // $.getJSON(getThisJson, function(json) {
     //     console.log(json);
-    //     
-
     // });
 
 }
@@ -139,20 +114,21 @@ var fakeTweets = function(testCity) {
 $(document).on('ready', function() {
 
     //setup initial loading of basemap
-    var theMap = initialLoadMap('map', 39.7482097, -104.9950172, 14, "Gray", "GrayLabels");
+    theMapObjects = new MapObjects('map', 0, 0, 1, "Gray", "GrayLabels");
 
     // setup initial GeoTweets and ListOfGeoTweets
-    allGeoTweets = new ListOfGeoTweets(theMap);
+    allGeoTweets = new ListOfGeoTweets();
 
     // pan to clicked on tweet text and open pop-up info
     $(document).on('click', '.tweet-container', function() {
         var tweetId = $(this).attr('data-tweet-id')
+        $(this).addClass('callout').siblings().removeClass('callout');
         console.log(tweetId);
-        var foundTweet = allGeoTweets.geoTweets.filter(function(geoTweet) {
-            return geoTweet.tweetId === tweetId;
+        var foundMarker = theMapObjects.markers.filter(function(marker) {
+            return marker.options.alt === tweetId;
         })[0];
-        allGeoTweets.map.panTo(foundTweet.geoLatLng);
-        foundTweet.marker.openPopup();
+        theMapObjects.map.panTo(foundMarker.getLatLng());
+        foundMarker.openPopup();
     });
 
     // submit search api request 
@@ -160,16 +136,25 @@ $(document).on('ready', function() {
     // populate map with tweet markers
     $(document).on('click', '#search-twitter', function() {
 
+        //clear all tweets in tweets DOM container element
+        var tweetsContainer = $('#tweets-container');
+        tweetsContainer.empty();
+
+        // tweet feed dom element
+        var tweetFeed = $('#tweet-feed');
+
         //clear markers and empty current tweets
-        allGeoTweets.clearMapOfCurrentMarkers();
-        allGeoTweets.emptyTweetList();
+        theMapObjects.removeCurrentMarkers();
+        allGeoTweets.emptyGeoTweets();
 
         //get object for server side
         var formObject = $('#search-form form').serializeObject();
         console.log(formObject);
 
         // load fake tweet data
-        fakeTweets(formObject.testCity);
+        fakeTweets(formObject.testCity, allGeoTweets, theMapObjects, tweetIcon, tweetFeed, tweetsContainer, function() {
+            theMapObjects.panToMarkers();
+        });
 
         $('#view-tweets').addClass("disabled");
         $('#search-tweets').removeClass('disabled')

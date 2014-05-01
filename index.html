@@ -22,7 +22,9 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="small-12 columns hide" id="tweet-feed"></div>
+				<div class="small-12 columns hide" id="tweet-feed">
+					<div id="tweets-container"></div>
+				</div>
 				<div class="small-12 columns panel" id="search-form">
 					<form action="" method="POST" role="form">
 							<div class="row">
@@ -76,7 +78,7 @@
 			    					<div class="small-8 columns">
 			    						<select name="testCity">
 							          <option value="denver">Denver</option>
-							          <option value="tokyo">Tokyo</option>
+							          <option value="newyork">New York</option>
 							          <option value="paris">Paris</option>
 						        	</select>
 					        	</div>
@@ -147,10 +149,12 @@
   <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.2/js/foundation/foundation.topbar.min.js"></script> -->
   <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
   <script src="js/esri-leaflet.js"></script>
+  <script src="js/helpfunctions.js"></script>
   <script src="js/map.js"></script>
   <script type="text/javascript" src="data/denver.js"></script>
   <!-- // <script type="text/javascript" src="data/tokyo.js"></script> -->
   <script type="text/javascript" src="data/paris.js"></script>
+  <script type="text/javascript" src="data/ny1.js"></script>
   <script src="js/main.js"></script>
 
   <!--<script>

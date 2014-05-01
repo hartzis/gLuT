@@ -1,15 +1,62 @@
-var GeoCity = (function() {
-    function GeoCity(name) {
-        this.name = name;
-        this.state = null;
-        this.country = null;
-        this.geoLocation = null;
+var MapObjects = (function() {
+    function MapObjects(mapId, geoLat, geoLong, zoomLevel, esriBaseMap, esriBaseMapLabels) {
+        // setup initial map
+        var mapsInitialLatLng = new L.latLng(geoLat, geoLong);
+        this.map = L.map(mapId).setView(mapsInitialLatLng, zoomLevel);
+        L.esri.basemapLayer(esriBaseMap).addTo(this.map);
+        L.esri.basemapLayer(esriBaseMapLabels).addTo(this.map);
+        // set up marker stuff
+        this.markers = [];
+        this.markersFeatureGroup = new L.featureGroup();
     };
-    GeoCity.prototype.setGeoLocation = function(geoLat, geoLong) {
-        this.geoLocation = new L.latLong(geoLat, geoLong);
+    MapObjects.prototype.renderMarkersOnMap = function() {
+        this.markersFeatureGroup.addTo(this.map);
+    };
+    MapObjects.prototype.removeCurrentMarkers = function() {
+        this.map.removeLayer(this.markersFeatureGroup);
+        this.markersFeatureGroup.clearLayers();
+    };
+    MapObjects.prototype.setMarkerIcons = function(icon) {
+        for (var i = 0; i < this.markers.length; i++) {
+            this.markers[i].setIcon(icon);
+        };
+    };
+    MapObjects.prototype.panToMarkers = function() {
+        this.map.fitBounds(this.markersFeatureGroup.getBounds());
+    };
+    MapObjects.prototype.createMarkers = function(geoTweets) {
+        for (var i = 0; i < geoTweets.length; i++) {
+            var thisTweet = geoTweets[i];
+            var thisTweetsGeo = L.latLng(thisTweet.geoLatLng[0], thisTweet.geoLatLng[1]);
+            var newMarker = new L.marker(thisTweetsGeo, {
+                title: "@" + thisTweet.userScreenName,
+                alt: thisTweet.tweetId
+            });
+            newMarker.bindPopup("<div class='text-center'><img src='" + thisTweet.userIconUrl + "' class='user-icon'><br>" + thisTweet.userName + "</div>");
+            // newMarker.on('click', function(e) {
+            //     thisMap.panTo(e.latlng);
+            // });
+            this.markers.unshift(newMarker);
+        };
+    };
+    MapObjects.prototype.createMarkersFeatureGroup = function() {
+        for (var i = 0; i < this.markers.length; i++) {
+            this.markersFeatureGroup.addLayer(this.markers[i]);
+        };
+    };
+    MapObjects.prototype.createMarkersFeatureOnClickEvent = function(tweetFeed, $tweetsContainer) {
+        var thisMap = this.map;
+        this.markersFeatureGroup.on('click', function(e) {
+            var tweetId = e.layer.options.alt;
+            console.log(e.layer.options.alt);
+            thisMap.panTo(e.latlng);
+            theTweetDom = $tweetsContainer.find('[data-tweet-id="' + tweetId + '"]');
+            theTweetDom.addClass('callout').siblings().removeClass('callout');
+            tweetFeed.scrollTop(theTweetDom.position().top);
+        });
     };
 
-    return GeoCity;
+    return MapObjects;
 })();
 
 
