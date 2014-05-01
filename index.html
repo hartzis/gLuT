@@ -17,19 +17,14 @@
 	<div class="row">
 		<div class="small-12 medium-6 columns" id="info">
 			<div class="row">
-				<div class="small-6 small-centered columns">
-					<ul class="button-group">
-					  <li><a href="#" class="small button disabled" id="search-tweets">Search</a></li>
-					  <li><a href="#" class="small button" id="view-tweets">Tweets</a></li>
-					</ul>
+				<div class="small-12 small-centered text-center columns">
+					  <a href="#" class="small button disabled" id="search-tweets">Search</a><a href="#" class="small button" id="view-tweets">Tweets</a>
 				</div>
 			</div>
 			<div class="row">
 				<div class="small-12 columns hide" id="tweet-feed"></div>
-				<div class="small-12 columns" id="search-form">
+				<div class="small-12 columns panel" id="search-form">
 					<form action="" method="POST" role="form">
-						<fieldset>
-	    				<legend>Where to search</legend>
 							<div class="row">
 						    <div class="small-6 columns">
 						      <div class="row collapse">
@@ -88,9 +83,7 @@
 				    			</div>
 					    	</div>
 				    	</div>
-					  </fieldset>
-					  <fieldset>
-					  	<legend>What to search</legend>
+
 					  	<div class="row">
 					  		<div class="small-12 columns">
 					  			<div class="row">
@@ -102,17 +95,17 @@
 							    </div>
 							    <div class="row">
 						  			<div class="large-12 columns">
-								      <span class="search-info">A UTF-8, URL-encoded search query of 1,000 characters maximum, including operators. Queries may additionally be limited by complexity.Example: @noradio.</span>
+								      <p class="search-info">A UTF-8, URL-encoded search query of 1,000 characters maximum, including operators. Queries may additionally be limited by complexity.Example: @noradio.</p>
 								    </div>
 							    </div>
 					  		</div>
 					  	</div>
-					  </fieldset>
 					  <div class="row">
-						  	<div class="small-2 small-offset-4 columns">
+						  	<div class="small-12 small-centered columns text-center">
 						  		<button type="submit" class="small button" id="search-twitter">Submit</button>
 					  		</div>
 					  </div>
+
 					</form>
 				</div>
 			</div>
@@ -127,17 +120,17 @@
 
 
 
-<div class="row tweet-container" data-tweet-id="" id="tweet-container">
+<div class="row tweet-container panel radius" data-tweet-id="" id="tweet-container">
 	<div class="small-2 columns">
 		<img class="user-icon" src="">
 	</div>
 	<div class="small-10 columns">
 		<div class="row">
-			<div class="small-6 columns">
-				<span class="user-name"></span>
+			<div class="small-8 columns">
+				<h6><span class="user-name"></span><small><span class="user-screen-name"></span></small></h6>
 			</div>
-			<div class="small-6 columns">
-				<span class="date-span"></span>
+			<div class="small-4 columns">
+				<h6><small><span class="date-span"></span></small></h6>
 			</div>
 		</div>
 		<div class="row">
@@ -155,7 +148,9 @@
   <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
   <script src="js/esri-leaflet.js"></script>
   <script src="js/map.js"></script>
-  <script src="data/tweets.js"></script>
+  <script type="text/javascript" src="data/denver.js"></script>
+  <!-- // <script type="text/javascript" src="data/tokyo.js"></script> -->
+  <script type="text/javascript" src="data/paris.js"></script>
   <script src="js/main.js"></script>
 
   <!--<script>

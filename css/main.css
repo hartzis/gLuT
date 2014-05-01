@@ -1,28 +1,42 @@
+body{
+	/*background-color: #aaa;*/
+}
+.panel {
+	padding: 0.55rem;
+}
 #map {
 	height: 500px;
 	border: 2px solid #aaa;
 }
 
 #info {
-	height: 500px;
+/*	height: 500px;*/
 }
 
 .tweet-container {
-	border-bottom: 2px solid #444;
+	/*border-bottom: 2px solid #444;*/
 	cursor: pointer;
 	display: none;
 }
 .tweet-container:hover {
-	background-color: #eee;
+	background-color: rgb(233,249,255);
+	border-color: rgb(175,234,255);
 }
 .user-icon {
 	border-radius: 15%;
 }
 #tweet-feed {
-	height: 500px;
+	height: 436px;
 	overflow-y: scroll;
 	overflow-x: hidden;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #d8d8d8;
+	background: #f2f2f2;
 }
 .search-info {
+	font-size: .75rem;
+}
+.tweet-text {
 	font-size: .75rem;
 }

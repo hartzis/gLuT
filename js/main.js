@@ -51,7 +51,8 @@ var GeoTweet = (function() {
         var $tweetContainer = $('#tweet-container').clone().removeAttr('id');
         $tweetContainer.attr('data-tweet-id', this.tweetId);
         $tweetContainer.find('.user-icon').attr('src', this.userIconUrl);
-        $tweetContainer.find('.user-name').text(this.userName + " @" + this.userScreenName);
+        $tweetContainer.find('.user-name').text(this.userName);
+        $tweetContainer.find('.user-screen-name').text(" @" + this.userScreenName);
         $tweetContainer.find('.date-span').text(this.tweetDate);
         $tweetContainer.find('.tweet-text').text(this.tweet);
 
@@ -116,18 +117,32 @@ var ListOfGeoTweets = (function() {
     return ListOfGeoTweets;
 })();
 
+// fake tweet functions
+var fakeTweets = function(testCity) {
+    console.log(testCity);
+    var getThisJson = "./data/" + testCity + ".json";
+    console.log(getThisJson);
+
+    allGeoTweets.addGeoTweetData(window[testCity]);
+    allGeoTweets.setMarkerIcons(tweetIcon);
+    allGeoTweets.renderTweetsOnMap();
+    $('#tweet-feed').append(allGeoTweets.createFeed());
+
+    // $.getJSON(getThisJson, function(json) {
+    //     console.log(json);
+    //     
+
+    // });
+
+}
 
 $(document).on('ready', function() {
 
     //setup initial loading of basemap
     var theMap = initialLoadMap('map', 39.7482097, -104.9950172, 14, "Gray", "GrayLabels");
 
-
     // setup initial GeoTweets and ListOfGeoTweets
     allGeoTweets = new ListOfGeoTweets(theMap);
-
-
-
 
     // pan to clicked on tweet text and open pop-up info
     $(document).on('click', '.tweet-container', function() {
@@ -145,27 +160,52 @@ $(document).on('ready', function() {
     // populate map with tweet markers
     $(document).on('click', '#search-twitter', function() {
 
-        $('#search-form').slideToggle();
-        $('#tweet-feed').slideToggle();
+        //clear markers and empty current tweets
+        allGeoTweets.clearMapOfCurrentMarkers();
+        allGeoTweets.emptyTweetList();
 
-
-        allGeoTweets.addGeoTweetData(demoTweets);
-        allGeoTweets.setMarkerIcons(tweetIcon);
-
-        allGeoTweets.renderTweetsOnMap();
-
-        // display feed
-        $('#tweet-feed').append(allGeoTweets.createFeed());
-
-        var formObject = $('#search-form form').serializeObject()
+        //get object for server side
+        var formObject = $('#search-form form').serializeObject();
         console.log(formObject);
 
-        // load data from 'server'
-        // loadData(function(data){
-        // 	populate the map stuff
-        // });
+        // load fake tweet data
+        fakeTweets(formObject.testCity);
+
+        $('#view-tweets').addClass("disabled");
+        $('#search-tweets').removeClass('disabled')
+        // animate transition
+        $('#search-form').slideToggle(750, function() {
+            // display feed
+            $('#tweet-feed').slideDown(750);
+        });
 
         return false;
+    })
+
+    // switch to search form
+    $('#search-tweets').on('click', function() {
+        if (!($(this).hasClass("disabled"))) {
+            $(this).addClass("disabled");
+            $('#view-tweets').removeClass('disabled')
+            // animate trasition
+            $('#tweet-feed').slideToggle(750, function() {
+                // display search form
+                $('#search-form').slideToggle(750);
+            });
+        }
+    });
+
+    // switch to tweet feed
+    $('#view-tweets').on('click', function() {
+        if (!($(this).hasClass("disabled"))) {
+            $(this).addClass("disabled");
+            $('#search-tweets').removeClass('disabled')
+            // animate trasition
+            $('#search-form').slideToggle(750, function() {
+                // display feed
+                $('#tweet-feed').slideToggle(750);
+            });
+        }
     })
 
     $(document).on('click', '#login', function() {

@@ -1,4 +1,4 @@
-var demoTweets = {
+var denver = {
     "statuses": [{
         "metadata": {
             "result_type": "recent",
