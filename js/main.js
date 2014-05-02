@@ -156,8 +156,8 @@ $(document).on('ready', function() {
             theMapObjects.panToMarkers();
         });
 
-        $('#view-tweets').addClass("disabled");
-        $('#search-tweets').removeClass('disabled')
+        $('#view-tweets').parent().addClass("active");
+        $('#search-tweets').parent().removeClass('active')
         // animate transition
         $('#search-form').slideToggle(750, function() {
             // display feed
@@ -169,9 +169,9 @@ $(document).on('ready', function() {
 
     // switch to search form
     $('#search-tweets').on('click', function() {
-        if (!($(this).hasClass("disabled"))) {
-            $(this).addClass("disabled");
-            $('#view-tweets').removeClass('disabled')
+        if (!($(this).parent().hasClass("active"))) {
+            $(this).parent().addClass("active");
+            $('#view-tweets').parent().removeClass('active')
             // animate trasition
             $('#tweet-feed').slideToggle(750, function() {
                 // display search form
@@ -182,9 +182,9 @@ $(document).on('ready', function() {
 
     // switch to tweet feed
     $('#view-tweets').on('click', function() {
-        if (!($(this).hasClass("disabled"))) {
-            $(this).addClass("disabled");
-            $('#search-tweets').removeClass('disabled')
+        if (!($(this).parent().hasClass("active"))) {
+            $(this).parent().addClass("active");
+            $('#search-tweets').parent().removeClass('active')
             // animate trasition
             $('#search-form').slideToggle(750, function() {
                 // display feed

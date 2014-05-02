@@ -1,6 +1,9 @@
 body{
 	/*background-color: #aaa;*/
 }
+.active {
+	cursor: default;
+}
 .panel {
 	padding: 0.55rem;
 }
@@ -14,11 +17,15 @@ body{
 }
 #map {
 	height: 500px;
-	border: 2px solid #aaa;
+	/*border: 2px solid #aaa;*/
 }
 
 #info {
 /*	height: 500px;*/
+}
+
+#search-form form {
+	height: 482px;
 }
 
 .tweet-container {
@@ -40,7 +47,7 @@ relative to get the position of tweets from*/
 	position: relative;
 }
 #tweet-feed {
-	height: 436px;
+	height: 500px;
 	overflow-y: scroll;
 	overflow-x: hidden;
 	border-style: solid;

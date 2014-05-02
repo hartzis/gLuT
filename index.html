@@ -7,26 +7,62 @@
   <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.2/css/foundation.min.css">
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
   <link rel="stylesheet" type="text/css" href="css/main.css">
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 </head>
 <body>
-	<div class="row">
+<nav class="top-bar" data-topbar>
+  <ul class="title-area">
+    <li class="name">
+      <h1><a href="#">globally <u>L</u>ook<u>u</u>p <u>T</u>weets : gLuT</a></h1>
+    </li>
+     <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+  </ul>
+
+  <section class="top-bar-section">
+    <!-- Right Nav Section -->
+    <ul class="right">
+    	<li class="has-form">
+			  <a href="#" class="button">Login with Twitter</a>
+			</li>
+      <li class="has-dropdown">
+        <a href="#">Information</a>
+        <ul class="dropdown">
+          <li><a href="#">About Me</a></li>
+        </ul>
+      </li>
+    </ul>
+
+    <!-- Left Nav Section -->
+    <ul class="left">
+      <li class="active"><a href="#" id="search-tweets">Search</a></li>
+      <li><a href="#" id="view-tweets">GeoTweets</a></li>
+      <li><a href="#" id="view-regular-tweets">Tweets</a></li>
+    </ul>
+  </section>
+</nav>
+<!-- 	<div class="row">
 		<div class="small-12 columns">
 			<h1 class="title text-center">look up</h1>
 		</div>
-	</div>
+	</div> -->
 	<div class="row">
 		<div class="small-12 medium-6 columns" id="info">
-			<div class="row">
+			<!-- <div class="row">
 				<div class="small-12 small-centered text-center columns">
 					  <a href="#" class="small button disabled" id="search-tweets">Search</a><a href="#" class="small button" id="view-tweets">Tweets</a>
 				</div>
-			</div>
+			</div> -->
 			<div class="row">
 				<div class="small-12 columns hide" id="tweet-feed">
 					<div id="tweets-container"></div>
 				</div>
 				<div class="small-12 columns panel" id="search-form">
 					<form action="" method="POST" role="form">
+						<div class="row">
+							<div class="small-12 columns text-center"><h5>Add Location and Query then Submit!</h5></div>
+						</div>
 							<div class="row">
 						    <div class="small-6 columns">
 						      <div class="row collapse">
@@ -145,21 +181,20 @@
 
 
   <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-  <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.2/js/foundation.min.js"></script> -->
-  <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.2/js/foundation/foundation.topbar.min.js"></script> -->
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.2/js/foundation.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.2/js/foundation/foundation.topbar.min.js"></script>
   <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
   <script src="js/esri-leaflet.js"></script>
   <script src="js/helpfunctions.js"></script>
   <script src="js/map.js"></script>
   <script type="text/javascript" src="data/denver.js"></script>
-  <!-- // <script type="text/javascript" src="data/tokyo.js"></script> -->
   <script type="text/javascript" src="data/paris.js"></script>
   <script type="text/javascript" src="data/ny1.js"></script>
   <script src="js/main.js"></script>
 
-  <!--<script>
+  <script>
     $(document).foundation();
-  </script>-->
+  </script>
 
 
 </body>
