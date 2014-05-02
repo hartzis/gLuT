@@ -43,15 +43,28 @@ var MapObjects = (function() {
         };
     };
     MapObjects.prototype.createMarkersFeatureOnClickEvent = function(tweetFeed, $tweetsContainer) {
-        var thisMap = this.map;
+        // var thisMap = this.map;
         this.markersFeatureGroup.on('click', function(e) {
             // get tweet id and find tweet DOM element
+            console.log("e,latlng:", e.latlng, e, "this:", this);
             var tweetId = e.layer.options.alt;
-            thisMap.panTo(e.latlng);
+            e.target._map.panTo(e.latlng);
             theTweetDom = $tweetsContainer.find('[data-tweet-id="' + tweetId + '"]');
             theTweetDom.addClass('callout').siblings().removeClass('callout');
             tweetFeed.scrollTop(theTweetDom.position().top);
         });
+    };
+    MapObjects.prototype.createMarkersOnClickEvent = function(tweetFeed, $tweetsContainer) {
+        for (var i = 0; i < this.markers.length; i++) {
+            this.markers[i].on('click', function(e) {
+                console.log("fired:", e);
+                var tweetId = e.target.options.alt;
+                e.target._map.panTo(e.latlng);
+                theTweetDom = $tweetsContainer.find('[data-tweet-id="' + tweetId + '"]');
+                theTweetDom.addClass('callout').siblings().removeClass('callout');
+                tweetFeed.scrollTop(theTweetDom.position().top);
+            })
+        };
     };
 
     return MapObjects;

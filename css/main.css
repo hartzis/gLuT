@@ -17,7 +17,7 @@ body{
 }
 #map {
 	height: 500px;
-	/*border: 2px solid #aaa;*/
+	border: 1px solid rgb(207,207,207);
 }
 
 #info {
@@ -25,7 +25,7 @@ body{
 }
 
 #search-form form {
-	height: 482px;
+	height: 480px;
 }
 
 .tweet-container {

@@ -97,7 +97,8 @@ var fakeTweets = function(testCity, allGeoTweets, theMapObjects, tweetIcon, twee
     theMapObjects.createMarkers(allGeoTweets.geoTweets);
     theMapObjects.setMarkerIcons(tweetIcon);
     theMapObjects.createMarkersFeatureGroup();
-    theMapObjects.createMarkersFeatureOnClickEvent(tweetFeed, tweetsContainer);
+    // theMapObjects.createMarkersFeatureOnClickEvent(tweetFeed, tweetsContainer);
+    theMapObjects.createMarkersOnClickEvent(tweetFeed, tweetsContainer);
     theMapObjects.renderMarkersOnMap();
 
     /* need to have a container position
@@ -149,7 +150,7 @@ $(document).on('ready', function() {
 
         //get object for server side
         var formObject = $('#search-form form').serializeObject();
-        console.log(formObject);
+        console.log("Send Server Request:", formObject);
 
         // load fake tweet data
         fakeTweets(formObject.testCity, allGeoTweets, theMapObjects, tweetIcon, tweetFeed, tweetsContainer, function() {
