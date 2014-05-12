@@ -1,0 +1,52 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    title gLuT
+    link(rel='stylesheet', type='text/css', href='http://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.2/css/normalize.min.css')
+    link(rel='stylesheet', type='text/css', href='http://cdnjs.cloudflare.com/ajax/libs/foundation/5.2.2/css/foundation.min.css')
+    link(rel='stylesheet', href='http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css')
+    link(rel='stylesheet', type='text/css', href='css/main.css')
+    script(type='text/javascript', src='http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no')
+  body
+    nav.top-bar(data-topbar='data-topbar')
+      ul.title-area
+        li.name
+          h1
+            a(href='#')
+              | globally
+              u L
+              | ook
+              u u
+              | p
+              u T
+              | weets : gLuT
+        //
+           Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone 
+        li.toggle-topbar.menu-icon
+          a(href='#')
+            span Menu
+      section.top-bar-section
+        //
+           Right Nav Section 
+        ul.right
+          li.has-form
+            a.button(href='#') Login with Twitter
+          li.has-dropdown
+            a(href='#') Information
+            ul.dropdown
+              li
+                a(href='#') About Me
+        //
+           Left Nav Section 
+        ul.left
+          li.active
+            a#search-tweets(href='#') Search
+          li
+            a#view-tweets(href='#') GeoTweets
+          li
+            a#view-regular-tweets(href='#') Tweets
+    
+    block content
+      
